@@ -5,7 +5,8 @@ import Header from "@/components/Header"
 import Sidebar from "@/components/dashboard/Sidebar"
 import MainContent from "@/components/dashboard/MainContent"
 import type { Folder, FileItem } from "@/types"
-import { Menu } from "lucide-react"
+import { Menu, X } from "lucide-react"
+import { Button } from "@/components/ui/button"
 
 export default function Dashboard() {
   const [folders, setFolders] = useState<Folder[]>([])
@@ -33,42 +34,50 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-50">
-     <Header onToggleSidebar={() => setSidebarOpen(true)} />
+    <div className="min-h-screen bg-gray-50">
+      <Header />
 
-      <div className="flex">
-        {/* Mobile hamburger */}
-        <button
-          aria-label="Toggle sidebar"
-          className="md:hidden fixed top-4 left-4 z-30 p-2 rounded-md bg-white shadow-lg hover:bg-gray-100 transition"
+      <div className="flex h-[calc(100vh-64px)]">
+        {/* Mobile Sidebar Toggle */}
+        <Button
+          variant="ghost"
+          size="icon"
+          className="md:hidden fixed top-20 left-4 z-30 bg-white shadow-lg hover:bg-gray-50 border border-gray-200"
           onClick={() => setSidebarOpen(!sidebarOpen)}
+          aria-label="Toggle sidebar"
         >
-          <Menu className="w-6 h-6 text-[#00adef]" />
-        </button>
+          {sidebarOpen ? <X className="w-5 h-5 text-gray-600" /> : <Menu className="w-5 h-5 text-[#00adef]" />}
+        </Button>
 
         {/* Sidebar */}
-        <Sidebar
-          folders={folders}
-          onFileSelect={(file) => {
-            setSelectedFile(file)
-            setSidebarOpen(false) // auto close sidebar on mobile after select
-          }}
-          searchTerm={searchTerm}
-          onSearchChange={setSearchTerm}
-          loading={loading}
-          className={`${sidebarOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 fixed md:static top-0 left-0 h-full w-72 bg-white border-r border-gray-200 shadow-lg z-20 transform transition-transform duration-300 ease-in-out`}
-        />
+        <div
+          className={`${
+            sidebarOpen ? "translate-x-0" : "-translate-x-full"
+          } md:translate-x-0 fixed md:static top-16 left-0 h-[calc(100vh-64px)] w-80 bg-white shadow-xl md:shadow-none z-20 transform transition-transform duration-300 ease-in-out border-r border-gray-200`}
+        >
+          <Sidebar
+            folders={folders}
+            onFileSelect={(file) => {
+              setSelectedFile(file)
+              setSidebarOpen(false)
+            }}
+            searchTerm={searchTerm}
+            onSearchChange={setSearchTerm}
+            loading={loading}
+          />
+        </div>
 
-        {/* Overlay behind sidebar on mobile */}
+        {/* Overlay */}
         {sidebarOpen && (
           <div
             onClick={() => setSidebarOpen(false)}
-            className="fixed inset-0 bg-black bg-opacity-30 z-10 md:hidden"
+            className="fixed inset-0 bg-black bg-opacity-25 z-10 md:hidden backdrop-blur-sm"
           />
         )}
 
-        {/* Main content */}
-        <main className="flex-1 min-h-screen p-4 md:p-6 lg:p-10 overflow-auto max-h-[calc(100vh-64px)]">
+        {/* Main Content */}
+<main className="flex-1 overflow-auto">
+
           <MainContent selectedFile={selectedFile} searchTerm={searchTerm} folders={folders} />
         </main>
       </div>

@@ -1,34 +1,53 @@
+"use client"
+
+import { useEffect, useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { CreditCard, Smartphone, Building, Shield } from "lucide-react"
 
-const products = [
-  {
-    title: "Digital Banking Products",
-    description: "Mobile banking, ATM services, online banking solutions",
-    icon: Smartphone,
-    color: "bg-blue-50 text-[#00adef]",
-  },
-  {
-    title: "Credit & Loan Products",
-    description: "Personal loans, business loans, credit cards, mortgages",
-    icon: CreditCard,
-    color: "bg-green-50 text-green-600",
-  },
-  {
-    title: "Corporate Banking",
-    description: "Business accounts, trade finance, cash management",
-    icon: Building,
-    color: "bg-purple-50 text-purple-600",
-  },
-  {
-    title: "Security & Insurance",
-    description: "Account protection, insurance products, fraud prevention",
-    icon: Shield,
-    color: "bg-orange-50 text-orange-600",
-  },
-]
+interface Product {
+  id: number
+  title: string
+  description: string
+  category: string // to determine icon/color
+}
 
 export default function ProductsOverview() {
+  const [products, setProducts] = useState<Product[]>([])
+
+  useEffect(() => {
+    fetchProducts()
+  }, [])
+
+  const fetchProducts = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/api/products")
+      if (res.ok) {
+        const data = await res.json()
+        setProducts(data)
+      } else {
+        console.error("Failed to fetch products")
+      }
+    } catch (err) {
+      console.error("Error:", err)
+    }
+  }
+
+  // Determine icon and color based on category (or product title)
+  const getIcon = (category: string) => {
+    switch (category.toLowerCase()) {
+      case "digital banking":
+        return { icon: Smartphone, color: "bg-blue-50 text-[#00adef]" }
+      case "credit & loan":
+        return { icon: CreditCard, color: "bg-green-50 text-green-600" }
+      case "corporate banking":
+        return { icon: Building, color: "bg-purple-50 text-purple-600" }
+      case "security & insurance":
+        return { icon: Shield, color: "bg-orange-50 text-orange-600" }
+      default:
+        return { icon: Smartphone, color: "bg-gray-100 text-gray-500" }
+    }
+  }
+
   return (
     <section className="py-20 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -40,21 +59,22 @@ export default function ProductsOverview() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {products.map((product, index) => (
-            <Card key={index} className="hover:shadow-lg transition-shadow duration-300">
-              <CardHeader className="text-center">
-                <div
-                  className={`w-16 h-16 rounded-full ${product.color} flex items-center justify-center mx-auto mb-4`}
-                >
-                  <product.icon className="w-8 h-8" />
-                </div>
-                <CardTitle className="text-xl">{product.title}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-center">{product.description}</CardDescription>
-              </CardContent>
-            </Card>
-          ))}
+          {products.map((product) => {
+            const { icon: Icon, color } = getIcon(product.category || product.title)
+            return (
+              <Card key={product.id} className="transition-shadow duration-300">
+                <CardHeader className="text-center">
+                  <div className={`w-16 h-16 rounded-full ${color} flex items-center justify-center mx-auto mb-4`}>
+                    <Icon className="w-8 h-8" />
+                  </div>
+                  <CardTitle className="text-xl">{product.title}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription className="text-center">{product.description}</CardDescription>
+                </CardContent>
+              </Card>
+            )
+          })}
         </div>
       </div>
     </section>

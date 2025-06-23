@@ -21,27 +21,17 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
           
           {/* Left: Logo + Title */}
           <div className="flex items-center gap-3">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="md:hidden mr-2"
-              onClick={onToggleSidebar}
-              aria-label="Open sidebar"
-            >
-              <Menu className="w-6 h-6 text-[#00adef]" />
-            </Button>
+           
             <Link href="/">
               <Image
                 src={logo}
                 alt="Logo"
-                width={60}
-                height={60}
+                width={75}
+                height={75}
                 className="object-contain"
               />
             </Link>
-            <Link href="/" className="text-xl md:text-1.5xl font-medium text-[#333] hover:text-[#009bd3] transition-colors">
-              Product Catalog
-            </Link>
+          
           </div>
 
           {/* Desktop Nav */}
@@ -52,9 +42,9 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
             <Link href="/dashboard" className="text-gray-700 hover:text-[#00adef] transition-colors text-sm font-medium">
               Products
             </Link>
-            <Link href="/admin" className="text-gray-700 hover:text-[#00adef] transition-colors text-sm font-medium">
+            {/* <Link href="/admin" className="text-gray-700 hover:text-[#00adef] transition-colors text-sm font-medium">
               Admin
-            </Link>
+            </Link> */}
           </nav>
 
           {/* Mobile Menu (Pages) */}
