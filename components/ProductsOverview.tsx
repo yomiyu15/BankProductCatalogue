@@ -2,13 +2,13 @@
 
 import { useEffect, useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { CreditCard, Smartphone, Building, Shield } from "lucide-react"
+import { Smartphone, Landmark, PiggyBank, Users } from "lucide-react"
 
 interface Product {
   id: number
   title: string
   description: string
-  category: string // to determine icon/color
+  category: string
 }
 
 export default function ProductsOverview() {
@@ -32,20 +32,20 @@ export default function ProductsOverview() {
     }
   }
 
-  // Determine icon and color based on category (or product title)
+  // Get icon based on product category
   const getIcon = (category: string) => {
-    switch (category.toLowerCase()) {
-      case "digital banking":
-        return { icon: Smartphone, color: "bg-blue-50 text-[#00adef]" }
-      case "credit & loan":
-        return { icon: CreditCard, color: "bg-green-50 text-green-600" }
-      case "corporate banking":
-        return { icon: Building, color: "bg-purple-50 text-purple-600" }
-      case "security & insurance":
-        return { icon: Shield, color: "bg-orange-50 text-orange-600" }
-      default:
-        return { icon: Smartphone, color: "bg-gray-100 text-gray-500" }
+    const normalized = category.toLowerCase()
+    
+    if (normalized.includes('digital')) {
+      return Smartphone
+    } else if (normalized.includes('ifb') || normalized.includes('conventional')) {
+      return Landmark
+    } else if (normalized.includes('deposit')) {
+      return PiggyBank
+    } else if (normalized.includes('youth') || normalized.includes('women')) {
+      return Users
     }
+    return Smartphone // Default icon
   }
 
   return (
@@ -60,17 +60,25 @@ export default function ProductsOverview() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {products.map((product) => {
-            const { icon: Icon, color } = getIcon(product.category || product.title)
+            const Icon = getIcon(product.category || product.title)
             return (
-              <Card key={product.id} className="transition-shadow duration-300">
+              <Card 
+                key={product.id} 
+                className="transition-shadow duration-300 hover:shadow-lg"
+              >
                 <CardHeader className="text-center">
-                  <div className={`w-16 h-16 rounded-full ${color} flex items-center justify-center mx-auto mb-4`}>
-                    <Icon className="w-8 h-8" />
+                  <div 
+                    className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
+                    style={{ backgroundColor: 'rgba(238, 123, 40, 0.1)' }}
+                  >
+                    <Icon className="w-8 h-8" style={{ color: '#ee7b28' }} />
                   </div>
                   <CardTitle className="text-xl">{product.title}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <CardDescription className="text-center">{product.description}</CardDescription>
+                  <CardDescription className="text-center text-gray-600">
+                    {product.description}
+                  </CardDescription>
                 </CardContent>
               </Card>
             )

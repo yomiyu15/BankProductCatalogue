@@ -129,14 +129,6 @@ const MainContent: React.FC<MainContentProps> = ({
     );
   }
 
-  const handleDownload = (file: FileItem) => {
-    const link = document.createElement("a");
-    link.href = `http://localhost:5000/uploads/${file.filename}`;
-    link.download = file.name;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
 
   return (
     <div className="flex-1 flex flex-col">
@@ -299,12 +291,12 @@ const MainContent: React.FC<MainContentProps> = ({
                   <Card
                     key={file.id}
                     className="w-full hover:shadow-md transition-all duration-200 border border-gray-100 rounded-xl cursor-pointer"
-                    onClick={() =>
-                      window.open(
-                        `http://localhost:5000/uploads/${file.filename}`,
-                        "_blank"
-                      )
-                    }
+                    // onClick={() =>
+                    //   window.open(
+                    //     `http://localhost:5000/uploads/${file.filename}`,
+                    //     "_blank"
+                    //   )
+                    // }
                   >
                     <CardHeader className="pb-3">
                       <div className="flex items-start">

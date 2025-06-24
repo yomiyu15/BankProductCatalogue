@@ -119,8 +119,8 @@ export default function Hero() {
                     </svg>
                   </div>
                   <div>
-                    <div className="text-xs text-gray-500">Security</div>
-                    <div className="font-semibold text-sm">Bank-grade</div>
+                    <div className="text-xs text-gray-500">Digital</div>
+                    <div className="font-semibold text-sm">Bank-products</div>
                   </div>
                 </div>
               </motion.div>

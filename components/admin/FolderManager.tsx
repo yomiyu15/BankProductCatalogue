@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Trash2, Edit, Plus, Folder } from "lucide-react"
 import type { Folder as FolderType } from "@/types"
 
+
 export default function FolderManager() {
   const [folders, setFolders] = useState<FolderType[]>([])
   const [newFolderName, setNewFolderName] = useState("")

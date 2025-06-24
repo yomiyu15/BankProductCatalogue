@@ -113,7 +113,7 @@ export default function AdvancedLoginForm({ onLogin }: LoginFormProps) {
     setError("")
 
     try {
-      const response = await fetch("http://localhost:5000/api/admin/login", {
+      const response = await fetch("http://localhost:5000/api/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -304,18 +304,17 @@ export default function AdvancedLoginForm({ onLogin }: LoginFormProps) {
 
               {/* Keyboard Shortcut Hint */}
               <div className="text-center">
-                <p className="text-xs text-gray-500">
-                  Press <kbd className="px-1 py-0.5 bg-gray-100 rounded text-xs">Ctrl + Enter</kbd> to login
-                </p>
+               <p className="text-right text-sm">
+  <a href="/Forgetpassword" className="text-blue-600 hover:underline">Forgot password?</a>
+</p>
+
               </div>
             </form>
           </CardContent>
         </Card>
 
         {/* Footer */}
-        <div className="text-center mt-8 animate-in slide-in-from-bottom duration-500 delay-500">
-          <p className="text-sm text-gray-500">Secure admin access • Protected by encryption</p>
-        </div>
+        
       </div>
     </div>
   )
