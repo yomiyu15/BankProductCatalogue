@@ -1,4 +1,4 @@
-export const BASE_URL = "http://localhost:5000/api";
+export const BASE_URL = "https://backend-service-1wqi.onrender.com/api";
 
 // Return type explicitly set to Record<string, string> for headers
 export const getAuthHeaders = (): Record<string, string> => {

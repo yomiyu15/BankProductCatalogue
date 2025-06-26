@@ -17,7 +17,7 @@ export default function ForgotPasswordForm() {
     setError("")
 
     try {
-      const res = await fetch("http://localhost:5000/api/forgot-password", {
+      const res = await fetch("https://backend-service-1wqi.onrender.com/api/forgot-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username }),

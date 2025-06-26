@@ -28,7 +28,7 @@ export default function ProductManager() {
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/products")
+      const response = await fetch("https://backend-service-1wqi.onrender.com/api/products")
       if (response.ok) {
         const data = await response.json()
         setProducts(data)
@@ -43,7 +43,7 @@ export default function ProductManager() {
 
     setLoading(true)
     try {
-      const response = await fetch("http://localhost:5000/api/products", {
+      const response = await fetch("https://backend-service-1wqi.onrender.com/api/products", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -74,7 +74,7 @@ export default function ProductManager() {
 
     setLoading(true)
     try {
-      const response = await fetch(`http://localhost:5000/api/products/${editingProduct.id}`, {
+      const response = await fetch(`https://backend-service-1wqi.onrender.com/api/products/${editingProduct.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -103,7 +103,7 @@ export default function ProductManager() {
 
     setLoading(true)
     try {
-      const response = await fetch(`http://localhost:5000/api/products/${id}`, {
+      const response = await fetch(`https://backend-service-1wqi.onrender.com/api/products/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("adminToken")}`,

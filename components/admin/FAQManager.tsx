@@ -13,11 +13,14 @@ interface FAQ {
   answer: string
 }
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://backend-service-1wqi.onrender.com"
+
 export default function FAQManager() {
   const [faqs, setFaqs] = useState<FAQ[]>([])
   const [newQuestion, setNewQuestion] = useState("")
   const [newAnswer, setNewAnswer] = useState("")
   const [editingFaq, setEditingFaq] = useState<FAQ | null>(null)
+  const [faqToDelete, setFaqToDelete] = useState<FAQ | null>(null)
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
@@ -26,7 +29,7 @@ export default function FAQManager() {
 
   const fetchFAQs = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/faqs")
+      const response = await fetch(`${API_BASE_URL}/api/faqs`)
       if (response.ok) {
         const data = await response.json()
         setFaqs(data)
@@ -41,7 +44,7 @@ export default function FAQManager() {
 
     setLoading(true)
     try {
-      const response = await fetch("http://localhost:5000/api/faqs", {
+      const response = await fetch(`${API_BASE_URL}/api/faqs`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -70,7 +73,7 @@ export default function FAQManager() {
 
     setLoading(true)
     try {
-      const response = await fetch(`http://localhost:5000/api/faqs/${editingFaq.id}`, {
+      const response = await fetch(`${API_BASE_URL}/api/faqs/${editingFaq.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -93,12 +96,12 @@ export default function FAQManager() {
     }
   }
 
-  const deleteFAQ = async (id: number) => {
-    if (!confirm("Are you sure you want to delete this FAQ?")) return
+  const confirmDeleteFAQ = async () => {
+    if (!faqToDelete) return
 
     setLoading(true)
     try {
-      const response = await fetch(`http://localhost:5000/api/faqs/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/api/faqs/${faqToDelete.id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
@@ -112,6 +115,7 @@ export default function FAQManager() {
       console.error("Error deleting FAQ:", error)
     } finally {
       setLoading(false)
+      setFaqToDelete(null)
     }
   }
 
@@ -170,7 +174,7 @@ export default function FAQManager() {
                           <Button size="sm" variant="outline" onClick={() => setEditingFaq(faq)}>
                             <Edit className="w-4 h-4" />
                           </Button>
-                          <Button size="sm" variant="destructive" onClick={() => deleteFAQ(faq.id)}>
+                          <Button size="sm" variant="destructive" onClick={() => setFaqToDelete(faq)}>
                             <Trash2 className="w-4 h-4" />
                           </Button>
                         </div>
@@ -185,6 +189,26 @@ export default function FAQManager() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Delete Confirmation Modal */}
+      {faqToDelete && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white rounded-xl shadow-lg p-6 max-w-sm w-full">
+            <h2 className="text-lg font-semibold mb-4">Delete FAQ</h2>
+            <p className="mb-6">
+              Are you sure you want to delete <strong>{faqToDelete.question}</strong>?
+            </p>
+            <div className="flex justify-end space-x-3">
+              <Button variant="outline" onClick={() => setFaqToDelete(null)}>
+                Cancel
+              </Button>
+              <Button variant="destructive" onClick={confirmDeleteFAQ} disabled={loading}>
+                Delete
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

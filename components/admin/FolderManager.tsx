@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Trash2, Edit, Plus, Folder } from "lucide-react"
 import type { Folder as FolderType } from "@/types"
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://backend-service-1wqi.onrender.com"
 
 export default function FolderManager() {
   const [folders, setFolders] = useState<FolderType[]>([])
@@ -15,6 +16,8 @@ export default function FolderManager() {
   const [selectedParentId, setSelectedParentId] = useState<string>("root")
   const [editingFolder, setEditingFolder] = useState<FolderType | null>(null)
   const [loading, setLoading] = useState(false)
+  const [message, setMessage] = useState<string | null>(null)
+  const [folderToDelete, setFolderToDelete] = useState<FolderType | null>(null)
 
   useEffect(() => {
     fetchFolders()
@@ -22,7 +25,7 @@ export default function FolderManager() {
 
   const fetchFolders = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/folders")
+      const response = await fetch(`${API_BASE_URL}/api/folders`)
       if (response.ok) {
         const data = await response.json()
         setFolders(data)
@@ -37,7 +40,7 @@ export default function FolderManager() {
 
     setLoading(true)
     try {
-      const response = await fetch("http://localhost:5000/api/folders", {
+      const response = await fetch(`${API_BASE_URL}/api/folders`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -50,14 +53,19 @@ export default function FolderManager() {
       })
 
       if (response.ok) {
+        setMessage(`Folder "${newFolderName}" created successfully.`)
         setNewFolderName("")
         setSelectedParentId("root")
         fetchFolders()
+      } else {
+        setMessage("Failed to create folder.")
       }
     } catch (error) {
       console.error("Error creating folder:", error)
+      setMessage("An error occurred.")
     } finally {
       setLoading(false)
+      setTimeout(() => setMessage(null), 3000)
     }
   }
 
@@ -66,7 +74,7 @@ export default function FolderManager() {
 
     setLoading(true)
     try {
-      const response = await fetch(`http://localhost:5000/api/folders/${editingFolder.id}`, {
+      const response = await fetch(`${API_BASE_URL}/api/folders/${editingFolder.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -88,12 +96,11 @@ export default function FolderManager() {
     }
   }
 
-  const deleteFolder = async (id: number) => {
-    if (!confirm("Are you sure you want to delete this folder?")) return
-
+  const confirmDeleteFolder = async () => {
+    if (!folderToDelete) return
     setLoading(true)
     try {
-      const response = await fetch(`http://localhost:5000/api/folders/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/api/folders/${folderToDelete.id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
@@ -107,6 +114,7 @@ export default function FolderManager() {
       console.error("Error deleting folder:", error)
     } finally {
       setLoading(false)
+      setFolderToDelete(null)
     }
   }
 
@@ -115,7 +123,7 @@ export default function FolderManager() {
     folders.forEach((folder) => {
       options.push(
         <SelectItem key={folder.id} value={folder.id.toString()}>
-          {"  ".repeat(level) + folder.name}
+          {"  ".repeat(level) + folder.name}
         </SelectItem>,
       )
       if (folder.subfolders) {
@@ -158,7 +166,7 @@ export default function FolderManager() {
                     <Button size="sm" variant="outline" onClick={() => setEditingFolder(folder)}>
                       <Edit className="w-4 h-4" />
                     </Button>
-                    <Button size="sm" variant="destructive" onClick={() => deleteFolder(folder.id)}>
+                    <Button size="sm" variant="destructive" onClick={() => setFolderToDelete(folder)}>
                       <Trash2 className="w-4 h-4" />
                     </Button>
                   </>
@@ -174,6 +182,8 @@ export default function FolderManager() {
 
   return (
     <div className="space-y-6">
+      {message && <p className="text-green-600 font-medium">{message}</p>}
+
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center">
@@ -215,6 +225,26 @@ export default function FolderManager() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Delete Confirmation Modal */}
+      {folderToDelete && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white rounded-xl shadow-lg p-6 max-w-sm w-full">
+            <h2 className="text-lg font-semibold mb-4">Delete Folder</h2>
+            <p className="mb-6">
+              Are you sure you want to delete the folder <strong>{folderToDelete.name}</strong>?
+            </p>
+            <div className="flex justify-end space-x-3">
+              <Button variant="outline" onClick={() => setFolderToDelete(null)}>
+                Cancel
+              </Button>
+              <Button variant="destructive" onClick={confirmDeleteFolder} disabled={loading}>
+                Delete
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

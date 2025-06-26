@@ -21,7 +21,7 @@ export default function Dashboard() {
 
   const fetchFolders = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/folders")
+      const response = await fetch("https://backend-service-1wqi.onrender.com/api/folders")
       if (response.ok) {
         const data = await response.json()
         setFolders(data)
