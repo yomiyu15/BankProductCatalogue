@@ -175,7 +175,7 @@ const MainContent: React.FC<MainContentProps> = ({
         <div className="flex justify-center p-2 sm:p-4" ref={containerRef}>
           <div className="w-full max-w-4xl">
             <Document
-              file={`https://backend-service-1wqi.onrender.com/uploads/${selectedFile.filename}`}
+              file={`http://localhost:5000/uploads/${selectedFile.filename}`}
               onLoadSuccess={onDocumentLoadSuccess}
               loading={
                 <div className="py-6 sm:py-8 text-center">

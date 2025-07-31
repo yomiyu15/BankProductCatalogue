@@ -20,7 +20,7 @@ export default function ProductsOverview() {
 
   const fetchProducts = async () => {
     try {
-      const res = await fetch("https://backend-service-1wqi.onrender.com/api/products")
+      const res = await fetch("http://localhost:5000/api/products")
       if (res.ok) {
         const data = await res.json()
         setProducts(data)

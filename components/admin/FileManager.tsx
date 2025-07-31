@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Trash2, Upload, FileText } from "lucide-react"
 import type { Folder, FileItem } from "@/types"
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://backend-service-1wqi.onrender.com"
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000"
 
 export default function FileManager() {
   const [folders, setFolders] = useState<Folder[]>([])

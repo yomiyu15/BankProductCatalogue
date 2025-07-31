@@ -20,7 +20,7 @@ export default function FAQ() {
 
   const fetchFAQs = async () => {
     try {
-      const response = await fetch("https://backend-service-1wqi.onrender.com/api/faqs")
+      const response = await fetch("http://localhost:5000/api/faqs")
       if (response.ok) {
         const data = await response.json()
         setFaqs(data)

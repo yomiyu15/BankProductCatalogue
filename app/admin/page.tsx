@@ -18,7 +18,7 @@ export default function Admin() {
     const token = localStorage.getItem("adminToken")
     if (token) {
       try {
-        const response = await fetch("https://backend-service-1wqi.onrender.com/api/admin/verify", {
+        const response = await fetch("http://localhost:5000/api/admin/verify", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
