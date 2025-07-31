@@ -20,7 +20,7 @@ export default function ProductsOverview() {
 
   const fetchProducts = async () => {
     try {
-      const res = await fetch("http://10.12.53.34:5000api/products")
+      const res = await fetch("http://10.12.53.34:5000/api/products")
       if (res.ok) {
         const data = await res.json()
         setProducts(data)

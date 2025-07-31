@@ -17,7 +17,7 @@ export default function ForgotPasswordForm() {
     setError("")
 
     try {
-      const res = await fetch("http://10.12.53.34:5000api/forgot-password", {
+      const res = await fetch("http://10.12.53.34:5000/api/forgot-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username }),

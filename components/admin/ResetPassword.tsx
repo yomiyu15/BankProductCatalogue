@@ -19,7 +19,7 @@ export default function ResetPasswordForm() {
     setError("")
 
     try {
-      const res = await fetch("http://10.12.53.34:5000api/reset-password", {
+      const res = await fetch("http://10.12.53.34:5000/api/reset-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token, newPassword }),

@@ -20,7 +20,7 @@ export default function FAQ() {
 
   const fetchFAQs = async () => {
     try {
-      const response = await fetch("http://10.12.53.34:5000api/faqs")
+      const response = await fetch("http://10.12.53.34:5000/api/faqs")
       if (response.ok) {
         const data = await response.json()
         setFaqs(data)

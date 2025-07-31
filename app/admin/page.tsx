@@ -18,7 +18,7 @@ export default function Admin() {
     const token = localStorage.getItem("adminToken")
     if (token) {
       try {
-        const response = await fetch("http://10.12.53.34:5000api/admin/verify", {
+        const response = await fetch("http://10.12.53.34:5000/api/admin/verify", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
