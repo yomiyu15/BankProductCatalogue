@@ -21,7 +21,7 @@
 
 //   const fetchFolders = async () => {
 //     try {
-//       const response = await fetch("http://localhost:5000/api/folders")
+//       const response = await fetch("http://10.12.53.34:5000api/folders")
 //       if (response.ok) {
 //         const data = await response.json()
 //         setFolders(data)
@@ -95,7 +95,7 @@ export const dynamic = "force-dynamic" // optional but keeps you safe
 
 async function getFolders(): Promise<Folder[]> {
   try {
-    const res = await fetch("http://localhost:5000/api/folders", {
+    const res = await fetch("http://10.12.53.34:5000api/folders", {
       cache: "no-store",
     })
     if (!res.ok) throw new Error("Failed to fetch")

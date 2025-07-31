@@ -1,4 +1,4 @@
-export const BASE_URL = "http://localhost:5000/api";
+export const BASE_URL = "http://10.12.53.34:5000api";
 
 // Return type explicitly set to Record<string, string> for headers
 export const getAuthHeaders = (): Record<string, string> => {

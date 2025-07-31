@@ -113,7 +113,7 @@ export default function AdvancedLoginForm({ onLogin }: LoginFormProps) {
     setError("")
 
     try {
-      const response = await fetch("http://localhost:5000/api/login", {
+      const response = await fetch("http://10.12.53.34:5000/api/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -175,7 +175,7 @@ const MainContent: React.FC<MainContentProps> = ({
         <div className="flex justify-center p-2 sm:p-4" ref={containerRef}>
           <div className="w-full max-w-4xl">
             <Document
-              file={`http://localhost:5000/uploads/${selectedFile.filename}`}
+              file={`http://10.12.53.34:5000uploads/${selectedFile.filename}`}
               onLoadSuccess={onDocumentLoadSuccess}
               loading={
                 <div className="py-6 sm:py-8 text-center">
@@ -293,7 +293,7 @@ const MainContent: React.FC<MainContentProps> = ({
                     className="w-full hover:shadow-md transition-all duration-200 border border-gray-100 rounded-xl cursor-pointer"
                     // onClick={() =>
                     //   window.open(
-                    //     `http://localhost:5000/uploads/${file.filename}`,
+                    //     `http://10.12.53.34:5000uploads/${file.filename}`,
                     //     "_blank"
                     //   )
                     // }
