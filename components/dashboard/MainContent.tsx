@@ -309,7 +309,11 @@ const MainContent: React.FC<MainContentProps> = ({
                   <Card
                     key={file.id}
                     className="w-full hover:shadow-md transition-all duration-200 border border-gray-100 rounded-xl cursor-pointer"
+<<<<<<< HEAD
+                  
+=======
                     onClick={() => onSelectFile?.(file)}
+>>>>>>> 389481e89c5df915de21d0972f8247f225a2b05b
                   >
                     <CardHeader className="pb-3">
                       <div className="flex items-start">
