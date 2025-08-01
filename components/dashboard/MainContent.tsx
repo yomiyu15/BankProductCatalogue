@@ -1,13 +1,12 @@
 "use client";
 
-import type React from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 
 import { FileText, Search, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { Folder, FileItem } from "@/types";
 import { Badge } from "@/components/ui/badge";
 import { Document, Page, pdfjs } from "react-pdf";
-import { useState, useEffect, useCallback, useRef } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import {
@@ -24,12 +23,14 @@ interface MainContentProps {
   selectedFile: FileItem | null;
   searchTerm: string;
   folders: Folder[];
+  onSelectFile?: (file: FileItem) => void; // Optional callback for file selection
 }
 
 const MainContent: React.FC<MainContentProps> = ({
   selectedFile,
   searchTerm,
   folders,
+  onSelectFile,
 }) => {
   const getAllFiles = (folders: Folder[]): FileItem[] =>
     folders.flatMap((f) => [
@@ -49,9 +50,15 @@ const MainContent: React.FC<MainContentProps> = ({
   const [isFavorite, setIsFavorite] = useState(false);
   const [containerWidth, setContainerWidth] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const pdfWrapperRef = useRef<HTMLDivElement>(null);
 
   const displayName = selectedFile?.name || "Untitled Document";
+
+  useEffect(() => {
+    // Reset page number and favorites when file changes
+    setPageNumber(1);
+    setNumPages(null);
+    setIsFavorite(false);
+  }, [selectedFile]);
 
   const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
     setNumPages(numPages);
@@ -82,53 +89,69 @@ const MainContent: React.FC<MainContentProps> = ({
 
   if (!selectedFile) {
     return (
-     <div className="flex flex-1 items-center justify-center p-10 sm:p-16 bg-gradient-to-br from-white to-blue-50">
-  <div className="text-center w-full max-w-4xl p-10 sm:p-14 bg-white rounded-3xl border border-gray-100">
-    
-    {/* Icon */}
-    <div className="bg-gradient-to-br from-blue-100 to-indigo-100 w-32 h-32 sm:w-36 sm:h-36 rounded-full mx-auto mb-8 flex items-center justify-center">
-      <FileText className="w-16 h-16 sm:w-20 sm:h-20" style={{ color: "#00adef" }} />
-    </div>
+      <div className="flex flex-1 items-center justify-center p-10 sm:p-16 bg-gradient-to-br from-white to-blue-50">
+        <div className="text-center w-full max-w-4xl p-10 sm:p-14 bg-white rounded-3xl border border-gray-100">
+          {/* Icon */}
+          <div className="bg-gradient-to-br from-blue-100 to-indigo-100 w-32 h-32 sm:w-36 sm:h-36 rounded-full mx-auto mb-8 flex items-center justify-center">
+            <FileText
+              className="w-16 h-16 sm:w-20 sm:h-20"
+              style={{ color: "#00adef" }}
+            />
+          </div>
 
-    {/* Title */}
-    <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-4">
-      Welcome to Document Viewer
-    </h2>
+          {/* Title */}
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-4">
+            Welcome to Document Viewer
+          </h2>
 
-    {/* Description */}
-    <p className="text-gray-600 text-base sm:text-lg mb-6 max-w-2xl mx-auto">
-      Select a file from the sidebar to preview its content. You can also browse your favorites or check recent activity below.
-    </p>
+          {/* Description */}
+          <p className="text-gray-600 text-base sm:text-lg mb-6 max-w-2xl mx-auto">
+            Select a file from the sidebar to preview its content. You can also
+            browse your favorites or check recent activity below.
+          </p>
 
-    {/* Buttons */}
-    <div className="flex flex-wrap justify-center gap-4 mb-8">
-      <Button variant="outline" size="lg" className="text-sm sm:text-base px-6 py-2">
-        <Star className="w-5 h-5 mr-2" style={{ color: "#00adef" }} />
-        View Favorites
-      </Button>
-      <Button variant="default" size="lg" className="text-sm sm:text-base px-6 py-2" style={{ backgroundColor: "#00adef", borderColor: "#00adef" }}>
-        Recent Files
-      </Button>
-    </div>
+          {/* Buttons */}
+          <div className="flex flex-wrap justify-center gap-4 mb-8">
+            <Button
+              variant="outline"
+              size="lg"
+              className="text-sm sm:text-base px-6 py-2"
+            >
+              <Star
+                className="w-5 h-5 mr-2"
+                style={{ color: "#00adef" }}
+              />
+              View Favorites
+            </Button>
+            <Button
+              variant="default"
+              size="lg"
+              className="text-sm sm:text-base px-6 py-2"
+              style={{ backgroundColor: "#00adef", borderColor: "#00adef" }}
+            >
+              Recent Files
+            </Button>
+          </div>
 
-    {/* Tips */}
-    <div className="bg-blue-50 border border-blue-200 rounded-xl px-6 py-5 text-left mx-auto max-w-2xl">
-      <h3 className="font-semibold text-lg mb-2" style={{ color: "#00adef" }}>
-        Tips to Get Started
-      </h3>
-      <ul className="list-disc list-inside text-sm space-y-1" style={{ color: "#00adef" }}>
-        <li>Search documents easily using the sidebar filter</li>
-        <li>Click on any file to instantly preview its content</li>
-        <li>Use the Favorites tab to bookmark key documents</li>
-        <li>Documents stay organized in folders by project</li>
-      </ul>
-    </div>
-  </div>
-</div>
-
+          {/* Tips */}
+          <div className="bg-blue-50 border border-blue-200 rounded-xl px-6 py-5 text-left mx-auto max-w-2xl">
+            <h3 className="font-semibold text-lg mb-2" style={{ color: "#00adef" }}>
+              Tips to Get Started
+            </h3>
+            <ul
+              className="list-disc list-inside text-sm space-y-1"
+              style={{ color: "#00adef" }}
+            >
+              <li>Search documents easily using the sidebar filter</li>
+              <li>Click on any file to instantly preview its content</li>
+              <li>Use the Favorites tab to bookmark key documents</li>
+              <li>Documents stay organized in folders by project</li>
+            </ul>
+          </div>
+        </div>
+      </div>
     );
   }
-
 
   return (
     <div className="flex-1 flex flex-col">
@@ -163,7 +186,7 @@ const MainContent: React.FC<MainContentProps> = ({
                   PDF
                 </Badge>
                 <span className="text-xs">
-                  {numPages} pages • {Math.round(Math.random() * 5) + 1} MB
+                  {numPages ?? "?"} pages • {Math.round(Math.random() * 5) + 1} MB
                 </span>
               </div>
             </div>
@@ -192,8 +215,8 @@ const MainContent: React.FC<MainContentProps> = ({
                     Failed to load document
                   </h3>
                   <p className="text-gray-600 text-xs sm:text-sm max-w-md mx-auto">
-                    The PDF file couldn't be loaded. Please check the file
-                    format or try again later.
+                    The PDF file couldn't be loaded. Please check the file format
+                    or try again later.
                   </p>
                   <Button className="mt-3" variant="outline" size="sm">
                     Retry
@@ -201,22 +224,17 @@ const MainContent: React.FC<MainContentProps> = ({
                 </div>
               }
             >
-              <div className="py-2 space-y-2 sm:space-y-3">
-                {Array.from(new Array(numPages), (_, index) => (
-                  <Page
-                    key={`page_${index + 1}`}
-                    pageNumber={index + 1}
-                    width={
-                      containerWidth
-                        ? Math.min(containerWidth - 32, 600)
-                        : Math.min(window.innerWidth - 32, 800)
-                    }
-                    className="mx-auto border border-gray-100 rounded-md shadow-sm"
-                    renderTextLayer={false}
-                    renderAnnotationLayer={false}
-                  />
-                ))}
-              </div>
+              <Page
+                pageNumber={pageNumber}
+                width={
+                  containerWidth
+                    ? Math.min(containerWidth - 32, 600)
+                    : Math.min(window.innerWidth - 32, 800)
+                }
+                className="mx-auto border border-gray-100 rounded-md shadow-sm"
+                renderTextLayer={false}
+                renderAnnotationLayer={false}
+              />
             </Document>
           </div>
         </div>
@@ -291,7 +309,11 @@ const MainContent: React.FC<MainContentProps> = ({
                   <Card
                     key={file.id}
                     className="w-full hover:shadow-md transition-all duration-200 border border-gray-100 rounded-xl cursor-pointer"
+<<<<<<< HEAD
                   
+=======
+                    onClick={() => onSelectFile?.(file)}
+>>>>>>> 389481e89c5df915de21d0972f8247f225a2b05b
                   >
                     <CardHeader className="pb-3">
                       <div className="flex items-start">
